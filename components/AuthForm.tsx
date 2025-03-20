@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { createAccount } from "@/lib/actions/user.actions";
+import OTPModal from "./OTPModal";
 
 type FormType = "sign-up" | "sign-in";
 
@@ -36,6 +38,7 @@ interface AuthFormProps {
 const AuthForm: FC<AuthFormProps> = ({ type }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [accountId, setAccountId] = useState(null);
   const formSchema = authFormSchema(type);
 
   // 1. Define your form.
@@ -52,6 +55,19 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    setIsLoading(true);
+    setErrorMessage("");
+    try {
+      const user = await createAccount({
+        fullName: values.fullName || "",
+        email: values.email,
+      });
+      setAccountId(user.accountId);
+    } catch {
+      setErrorMessage("Failed to create account");
+    } finally {
+      setIsLoading(false);
+    }
   }
   return (
     <>
@@ -121,6 +137,12 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
       </Form>
 
       {/* OTP verify */}
+      {true && (
+        <OTPModal
+        // fullName={form.getFieldState("fullName")}
+        // email={form.getFieldState("email")}
+        />
+      )}
     </>
   );
 };

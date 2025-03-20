@@ -93,8 +93,9 @@ export const verifyOTP = async ({
       sameSite: "strict",
       secure: true,
     });
-    return parseStringify(session);
+
+    return parseStringify({ sessionId: session.$id });
   } catch (error) {
-    console.log("failed to verify OTP", error);
+    handleError(error, "Failed to verify OTP");
   }
 };

@@ -137,11 +137,8 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
       </Form>
 
       {/* OTP verify */}
-      {true && (
-        <OTPModal
-        // fullName={form.getFieldState("fullName")}
-        // email={form.getFieldState("email")}
-        />
+      {accountId && (
+        <OTPModal email={form.getValues("email")} accountId={accountId} />
       )}
     </>
   );

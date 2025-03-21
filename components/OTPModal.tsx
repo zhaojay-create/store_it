@@ -1,3 +1,5 @@
+"use client";
+
 import { FC, useState } from "react";
 import {
   AlertDialog,
@@ -8,22 +10,23 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Button } from "./ui/button";
+import { sendEmailODP, verifyOTP } from "@/lib/actions/user.actions";
+import { useRouter } from "next/navigation";
 
 interface OTPModalProps {
-  fullName: string;
+  accountId: string;
   email: string;
 }
 
-const OTPModal: FC<OTPModalProps> = ({ fullName, email }) => {
+const OTPModal: FC<OTPModalProps> = ({ accountId, email }) => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");
@@ -34,6 +37,11 @@ const OTPModal: FC<OTPModalProps> = ({ fullName, email }) => {
 
     try {
       // verify OTP
+      const sessionId = await verifyOTP({ accountId, password });
+      if (sessionId) {
+        router.push("/");
+      }
+
       console.log("verify OTP");
     } catch (error) {
       console.log("failed to verify OTP", error);
@@ -44,6 +52,7 @@ const OTPModal: FC<OTPModalProps> = ({ fullName, email }) => {
 
   const handleResendOTP = async () => {
     // 调用 resend OTP
+    await sendEmailODP({ email });
   };
 
   return (

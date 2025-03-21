@@ -32,7 +32,7 @@ const handleError = (error: unknown, message: string) => {
   throw new Error(message);
 };
 
-const sendEmailODP = async ({ email }: { email: string }) => {
+export const sendEmailODP = async ({ email }: { email: string }) => {
   const { account } = await createAdminClient();
 
   try {

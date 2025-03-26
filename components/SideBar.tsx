@@ -7,7 +7,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { FC } from "react";
 
-const SideBar: FC = ({}) => {
+interface Props {
+  fullName: string;
+  email: string;
+  avatar: string;
+}
+
+const SideBar: FC<Props> = ({ fullName, email, avatar }) => {
   const pathName = usePathname();
 
   return (
@@ -41,6 +47,20 @@ const SideBar: FC = ({}) => {
           })}
         </ul>
       </nav>
+
+      {/* 用户头像 */}
+      <div>
+        <Image
+          src={avatar}
+          alt="avatar"
+          width={36}
+          height={36}
+          className="rounded-full"
+        />
+        <div className="hidden lg:block">
+          {fullName} <br /> {email}
+        </div>
+      </div>
     </aside>
   );
 };

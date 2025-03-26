@@ -1,7 +1,7 @@
 "use server";
 
 import { Query, ID } from "node-appwrite";
-import { createAdminClient } from "../appwrite";
+import { createAdminClient, createSessionClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
@@ -65,7 +65,7 @@ export const createAccount = async ({
       {
         fullName,
         email,
-        avatar: "/public/assets/avatar.png",
+        avatar: "/assets/avatar.png",
         accountId: accountid,
       }
     );
@@ -98,4 +98,20 @@ export const verifyOTP = async ({
   } catch (error) {
     handleError(error, "Failed to verify OTP");
   }
+};
+
+// 获取当前用户信息
+export const getCurrentUser = async () => {
+  const { databases, account } = await createSessionClient();
+
+  const result = await account.get();
+
+  const user = await databases.listDocuments(
+    appwriteConfig.databaseId,
+    appwriteConfig.usersCollectionId,
+    [Query.equal("accountId", result.$id)]
+  );
+
+  if (user.total <= 0) return null;
+  return parseStringify(user.documents[0]);
 };

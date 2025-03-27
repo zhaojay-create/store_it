@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { Button } from "./ui/button";
 import Search from "./Search";
 import FileUploader from "./FileUploader";
+import { signOutUser } from "@/lib/actions/user.actions";
 
 const Header: FC = ({}) => {
   return (
@@ -9,8 +10,14 @@ const Header: FC = ({}) => {
       <Search />
       <div className="flex justify-around items-center gap-3">
         <FileUploader />
-        <form>
-          <Button>退出</Button>
+        <form
+          action={async () => {
+            "use server";
+
+            await signOutUser();
+          }}
+        >
+          <Button type="submit">退出</Button>
         </form>
       </div>
     </header>

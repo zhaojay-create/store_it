@@ -5,6 +5,7 @@ import { createAdminClient, createSessionClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 // 创建账户流
 // 1. 用户输入 fullName  & email
@@ -114,4 +115,33 @@ export const getCurrentUser = async () => {
 
   if (user.total <= 0) return null;
   return parseStringify(user.documents[0]);
+};
+
+// 登出当前用户
+export const signOutUser = async () => {
+  const { account } = await createSessionClient();
+  try {
+    await account.deleteSession("current");
+    (await cookies()).delete("appwrite-session");
+  } catch (error) {
+    handleError(error, "Failed to sign out user");
+  } finally {
+    redirect("/");
+  }
+};
+
+// 登录
+export const signInUser = async ({ email }: { email: string }) => {
+  try {
+    const existingUser = await getUserbyEmail(email);
+
+    if (existingUser) {
+      await sendEmailODP({ email });
+      return parseStringify({ accountId: existingUser.accountId });
+    }
+
+    return parseStringify({ accountId: null, error: "User not found" });
+  } catch (error) {
+    handleError(error, "Failed to sign in user");
+  }
 };

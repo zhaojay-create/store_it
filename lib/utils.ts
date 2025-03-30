@@ -54,3 +54,8 @@ export const getFileTypesParams = (type: string) => {
       return ["document"];
   }
 };
+
+// 转换文件为 URL
+export const convertFileToUrl = (file: File) => {
+  return URL.createObjectURL(file);
+};

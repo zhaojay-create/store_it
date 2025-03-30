@@ -3,7 +3,9 @@
 import { FC, useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "./ui/button";
-import { cn, getFileType } from "@/lib/utils";
+import { cn, convertFileToUrl, getFileType } from "@/lib/utils";
+import Thumbnail from "./Thumbnail";
+import Image from "next/image";
 
 interface Props {
   ownerId: string;
@@ -21,6 +23,15 @@ const FileUploader: FC<Props> = ({ ownerId, accountId, className }) => {
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
+  const handleRemoveFile = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    fileName: string
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setFiles((pre) => pre.filter((file) => file.name !== fileName));
+  };
+
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
@@ -29,7 +40,7 @@ const FileUploader: FC<Props> = ({ ownerId, accountId, className }) => {
         {/* img 24x24 */}
       </Button>
       {files.length > 0 && (
-        <aside>
+        <aside className="fixed bottom-4 right-4 z-100 bg-white p-4 shadow-lg rounded-lg">
           <h4 className="text-light-100">uploading</h4>
           <ul>
             {files.map((file, index) => {
@@ -37,6 +48,25 @@ const FileUploader: FC<Props> = ({ ownerId, accountId, className }) => {
               return (
                 <li key={`${file.name}-${index}`} className="text-green-300">
                   {file.name} - {file.size} bytes
+                  <div className="flex items-center gap-3.5">
+                    <Thumbnail
+                      type={type}
+                      extension={extension as string}
+                      url={convertFileToUrl(file)}
+                    />
+                    <div className="flex flex-col">
+                      {file.name}
+                      <Image
+                        src="/assets/loader.gif"
+                        width={80}
+                        height={22}
+                        alt="loader"
+                      />
+                    </div>
+                    <Button onClick={(e) => handleRemoveFile(e, file.name)}>
+                      X
+                    </Button>
+                  </div>
                 </li>
               );
             })}

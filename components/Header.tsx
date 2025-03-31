@@ -4,12 +4,17 @@ import Search from "./Search";
 import FileUploader from "./FileUploader";
 import { signOutUser } from "@/lib/actions/user.actions";
 
-const Header: FC = ({}) => {
+interface HeaderProps {
+  userId: string;
+  accountId: string;
+}
+
+const Header: FC<HeaderProps> = ({ userId, accountId }) => {
   return (
     <header className="px-4 flex justify-between items-center">
       <Search />
       <div className="flex justify-around items-center gap-3">
-        <FileUploader />
+        <FileUploader ownerId={userId} accountId={accountId} />
         <form
           action={async () => {
             "use server";

@@ -20,12 +20,20 @@ import { Button } from "./ui/button";
 import { signOutUser } from "@/lib/actions/user.actions";
 
 interface Props {
+  $id: string;
+  accountId: string;
   fullName: string;
   email: string;
   avatar: string;
 }
 
-const MoblieNavigation: FC<Props> = ({ fullName, email, avatar }) => {
+const MoblieNavigation: FC<Props> = ({
+  $id: ownerId,
+  accountId,
+  fullName,
+  email,
+  avatar,
+}) => {
   const [open, setOpen] = useState(false);
   const pathName = usePathname();
 
@@ -65,7 +73,7 @@ const MoblieNavigation: FC<Props> = ({ fullName, email, avatar }) => {
             </nav>
             <Separator className="my-5 bg-light-200/20" />
             <div className="flex flex-col justify-between gap-5">
-              <FileUploader />
+              <FileUploader ownerId={ownerId} accountId={accountId} />
               <Button onClick={async () => await signOutUser()}>logout</Button>
             </div>
           </SheetHeader>

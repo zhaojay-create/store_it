@@ -6,8 +6,7 @@ import { handleError } from "./base";
 import { InputFile } from "node-appwrite/file";
 import { appwriteConfig } from "../appwrite/config";
 import { ID } from "node-appwrite";
-import { getFileType, parseStringify } from "../utils";
-import { error } from "console";
+import { convertFileToUrl, getFileType, parseStringify } from "../utils";
 import { revalidatePath } from "next/cache";
 
 export const uploadFile = async ({
@@ -28,10 +27,15 @@ export const uploadFile = async ({
       inputFile
     );
 
+    const fileUrl = await storage.getFileView(
+      appwriteConfig.bucketId,
+      bucketFile.$id
+    );
     const fileDocument = {
       type: getFileType(file.name).type,
       name: bucketFile.name,
-      url: bucketFile,
+      // url: 转换文件为 URL, 307
+      url: `https://cloud.appwrite.io/v1/storage/buckets/${appwriteConfig.bucketId}/files/${bucketFile.$id}/view?project=${appwriteConfig.projectId}&mode=admin`,
       extension: getFileType(file.name).extension,
       size: bucketFile.sizeOriginal,
       ownerId,
@@ -39,6 +43,7 @@ export const uploadFile = async ({
       users: [],
       bucketFileId: bucketFile.$id,
     };
+    console.log("fileDocument: ", fileDocument);
 
     const newFile = await databases
       .createDocument(

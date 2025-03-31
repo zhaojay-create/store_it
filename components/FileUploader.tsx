@@ -8,6 +8,8 @@ import { cn, convertFileToUrl, getFileType } from "@/lib/utils";
 import Thumbnail from "./Thumbnail";
 import Image from "next/image";
 import { MAX_FILE_SIZE } from "@/constants";
+import { uploadFile } from "@/lib/actions/file.action";
+import { usePathname } from "next/navigation";
 
 interface Props {
   ownerId: string;
@@ -16,19 +18,43 @@ interface Props {
 }
 
 const FileUploader: FC<Props> = ({ ownerId, accountId, className }) => {
+  const path = usePathname();
   const [files, setFiles] = useState<File[]>([]);
 
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    // Do something with the files
-    console.log(acceptedFiles);
-    setFiles(acceptedFiles);
-    const uploadPromises = acceptedFiles.map(async (file) => {
-      if (file.size > MAX_FILE_SIZE) {
-        setFiles((pre) => pre.filter((f) => f.name !== file.name));
-      }
-    });
-    return toast("Uploading...");
-  }, []);
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      // Do something with the files
+      console.log(acceptedFiles);
+      setFiles(acceptedFiles);
+      const uploadPromises = acceptedFiles.map(async (file) => {
+        if (file.size > MAX_FILE_SIZE) {
+          setFiles((pre) => pre.filter((f) => f.name !== file.name));
+          return toast(
+            <p className="text-white border-y-2">
+              <span className="font-semibold">
+                {file.name} - {file.size} bytes max file size is 50mb
+              </span>
+            </p>
+          );
+        }
+        // upload 文件
+        return uploadFile({
+          file,
+          ownerId,
+          accountId,
+          path: path,
+        }).then((uploadFile) => {
+          // 如果上传文件成功，展示的 loading 就会消失
+          if (uploadFile) {
+            setFiles((pre) => pre.filter((f) => f.name !== file.name));
+          }
+        });
+      });
+      // 等待所有文件的上传
+      await Promise.all(uploadPromises);
+    },
+    [ownerId, accountId, path]
+  );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleRemoveFile = (
@@ -82,11 +108,11 @@ const FileUploader: FC<Props> = ({ ownerId, accountId, className }) => {
           </ul>
         </aside>
       )}
-      {isDragActive ? (
+      {/* {isDragActive ? (
         <p>Drop the files here ...</p>
       ) : (
         <p>Drag 'n' drop some files here, or click to select files</p>
-      )}
+      )} */}
     </div>
   );
 };

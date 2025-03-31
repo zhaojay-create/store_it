@@ -1,11 +1,13 @@
 "use client";
 
 import { FC, useCallback, useState } from "react";
+import { toast } from "sonner";
 import { useDropzone } from "react-dropzone";
 import { Button } from "./ui/button";
 import { cn, convertFileToUrl, getFileType } from "@/lib/utils";
 import Thumbnail from "./Thumbnail";
 import Image from "next/image";
+import { MAX_FILE_SIZE } from "@/constants";
 
 interface Props {
   ownerId: string;
@@ -20,6 +22,12 @@ const FileUploader: FC<Props> = ({ ownerId, accountId, className }) => {
     // Do something with the files
     console.log(acceptedFiles);
     setFiles(acceptedFiles);
+    const uploadPromises = acceptedFiles.map(async (file) => {
+      if (file.size > MAX_FILE_SIZE) {
+        setFiles((pre) => pre.filter((f) => f.name !== file.name));
+      }
+    });
+    return toast("Uploading...");
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -29,6 +37,7 @@ const FileUploader: FC<Props> = ({ ownerId, accountId, className }) => {
   ) => {
     e.preventDefault();
     e.stopPropagation();
+
     setFiles((pre) => pre.filter((file) => file.name !== fileName));
   };
 

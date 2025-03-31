@@ -6,6 +6,7 @@ import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { handleError } from "./base";
 
 // 创建账户流
 // 1. 用户输入 fullName  & email
@@ -26,11 +27,6 @@ const getUserbyEmail = async (email: string) => {
   );
 
   return result.total > 0 ? result.documents[0] : null;
-};
-
-const handleError = (error: unknown, message: string) => {
-  console.log(error, message);
-  throw new Error(message);
 };
 
 export const sendEmailODP = async ({ email }: { email: string }) => {

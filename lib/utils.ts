@@ -59,3 +59,21 @@ export const getFileTypesParams = (type: string) => {
 export const convertFileToUrl = (file: File) => {
   return URL.createObjectURL(file);
 };
+
+// 转换文件的，的大小
+export const convertFileSize = (size: number) => {
+  const units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+  const exponent = Math.min(Math.floor(Math.log2(size) / 10), units.length - 1);
+  const unit = units[exponent];
+  return `${(size / Math.pow(2, 10 * exponent)).toFixed(2)} ${unit}`;
+};
+
+// 格式化日期
+// 2025-03-31T15:19:09.698+00:00
+export const formatDate = (date: string) => {
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};

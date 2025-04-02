@@ -1,6 +1,6 @@
 "use server";
 
-import { UploadFileProps } from "@/types";
+import { RenameFileProps, UploadFileProps } from "@/types";
 import { createAdminClient } from "../appwrite";
 import { handleError } from "./base";
 import { InputFile } from "node-appwrite/file";
@@ -97,5 +97,32 @@ export const getFils = async () => {
     return parseStringify(files);
   } catch (error) {
     handleError(error, "Failed to get files");
+  }
+};
+
+// 重命名文件
+export const renameFile = async ({
+  fileId,
+  extension,
+  path,
+  name,
+}: RenameFileProps) => {
+  const { databases } = await createAdminClient();
+  const newName = `${name}.${extension}`;
+
+  try {
+    const updateFile = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      fileId,
+      {
+        name: newName,
+      }
+    );
+
+    revalidatePath(path);
+    return parseStringify(updateFile);
+  } catch (error) {
+    handleError(error, "Failed to rename file");
   }
 };

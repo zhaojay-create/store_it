@@ -8,7 +8,7 @@ import { Button } from "./ui/button";
 
 const ImageThumbnail = ({ file }: { file: Models.Document }) => {
   return (
-    <div className="flex gap-3 border-2 border-solid bg-zinc-200 border-zinc-600 px-2 rounded-xl py-2">
+    <div className="flex gap-3 border-1 border-solid bg-yellow-50 border-gray-200 px-2 rounded-xl py-2">
       <Thumbnail type={file.type} extension={file.extension} url={file.url} />
       <div className="flex-col gap-3">
         <p className="capitalize">{file.name}</p>
@@ -59,7 +59,7 @@ export const ShareInput: FC<ShareInputProps> = ({
     <>
       <ImageThumbnail file={file} />
       <div className="grid grid-rows-4 gap-2">
-        <p>share file with other users</p>
+        <p className="justify-self-center">share file with other users</p>
         <Input
           type="email"
           placeholder="enter emails separated by commas"

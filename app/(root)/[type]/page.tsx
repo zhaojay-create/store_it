@@ -2,6 +2,7 @@ import Card from "@/components/Card";
 import Sort from "@/components/Sort";
 import { getFils } from "@/lib/actions/file.action";
 import { SearchParamProps } from "@/types";
+import { Models } from "node-appwrite";
 
 const Page = async ({ params }: SearchParamProps) => {
   const type = (await params)?.type as string;
@@ -28,8 +29,8 @@ const Page = async ({ params }: SearchParamProps) => {
       </section>
       {/* render files */}
       {files.total > 0 ? (
-        <section>
-          {files.documents.map((file) => (
+        <section className="grid  sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {files.documents.map((file: Models.Document) => (
             <Card key={file.$id} file={file} />
           ))}
         </section>

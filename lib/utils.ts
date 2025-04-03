@@ -32,6 +32,11 @@ export function getFileType(fileName: string) {
     case "doc":
       type = "document";
       break;
+    case "mp3":
+    case "wav":
+    case "ogg":
+      type = "audio";
+      break;
     default:
       type = "unknown";
       break;
@@ -78,7 +83,23 @@ export const formatDate = (date: string) => {
   });
 };
 
-//
+// 构造下载 URL
 export const constructDownloadUrl = (bucketFileId: string) => {
   return `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET}/files/${bucketFileId}/download?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}`;
+};
+
+// 根据 type 获取文件的图标
+export const getFileIcon = (type: string) => {
+  switch (type) {
+    case "image":
+      return "/assets/image_icon.png";
+    case "video":
+      return "/assets/media_icon.png";
+    case "audio":
+      return "/assets/audio_icon.png";
+    case "document":
+      return "/assets/document_icon.png";
+    default:
+      return "/assets/other_icon.png";
+  }
 };

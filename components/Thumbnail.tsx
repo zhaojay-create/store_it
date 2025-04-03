@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, getFileIcon } from "@/lib/utils";
 import Image from "next/image";
 import React, { FC } from "react";
 
@@ -23,7 +23,7 @@ const Thumbnail: FC<ThumbnailProps> = ({
     <figure className={cn("flex justify-center items-center", className)}>
       {/* 如果是图片，显示图片，否则显示 文件对应的，图标 */}
       <Image
-        src={isImage ? url : "icon"}
+        src={isImage ? url : getFileIcon(type)}
         alt="thumbnail"
         width={100}
         height={100}

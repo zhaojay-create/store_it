@@ -15,7 +15,7 @@ const Card: FC<CardProps> = ({ file }) => {
     <Link
       href={file.url}
       target="_blank"
-      className="block w-1/3 rounded-xl p-2 bg-white text-zinc-950"
+      className="block rounded-xl p-2 bg-white text-zinc-950"
     >
       <div className="flex justify-between">
         <Thumbnail

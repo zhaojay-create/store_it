@@ -1,6 +1,7 @@
 "use server";
 
 import {
+  DeleteFileProps,
   RenameFileProps,
   UpdateFileUsersProps,
   UploadFileProps,
@@ -152,6 +153,32 @@ export const updateFileUsers = async ({
     revalidatePath(path);
     return parseStringify(updateFile);
   } catch (error) {
-    handleError(error, "Failed to rename file");
+    handleError(error, "Failed to share file");
+  }
+};
+
+// 删除文件
+export const deleteFile = async ({
+  fileId,
+  bucketFileId,
+  path,
+}: DeleteFileProps) => {
+  const { databases, storage } = await createAdminClient();
+
+  try {
+    const deleteFile = await databases.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      fileId
+    );
+
+    if (deleteFile) {
+      await storage.deleteFile(appwriteConfig.bucketId, bucketFileId);
+    }
+
+    revalidatePath(path);
+    return parseStringify({ status: "success" });
+  } catch (error) {
+    handleError(error, "Failed to delete file");
   }
 };

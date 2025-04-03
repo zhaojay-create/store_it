@@ -4,11 +4,9 @@ import React, { FC, useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   DropdownMenu,
@@ -25,7 +23,11 @@ import { constructDownloadUrl } from "@/lib/utils";
 import Link from "next/link";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { renameFile } from "@/lib/actions/file.action";
+import {
+  deleteFile,
+  renameFile,
+  updateFileUsers,
+} from "@/lib/actions/file.action";
 import { usePathname } from "next/navigation";
 import { FileDetails, ShareInput } from "./ActionModalContent";
 
@@ -51,8 +53,16 @@ const ActionDropdown: FC<ActionDropdownProps> = ({ file }) => {
     setEmails([]);
   };
 
-  const handleRemoveEmail = (email: string) => {
+  const handleRemoveEmail = async (email: string) => {
     setEmails((pre) => pre.filter((e) => e !== email));
+    const updateEmails = emails.filter((e) => e !== email);
+    const success = await updateFileUsers({
+      fileId: file.$id,
+      emails: updateEmails,
+      path,
+    });
+    if (success) setEmails(updateEmails);
+    closeAllModals();
   };
 
   const handleAction = async () => {
@@ -63,8 +73,9 @@ const ActionDropdown: FC<ActionDropdownProps> = ({ file }) => {
     const actions = {
       rename: () =>
         renameFile({ fileId: file.$id, name, extension: file.extension, path }),
-      share: () => console.log("share"),
-      delete: () => console.log("delete"),
+      share: () => updateFileUsers({ fileId: file.$id, emails, path }),
+      delete: () =>
+        deleteFile({ fileId: file.$id, bucketFileId: file.$id, path }),
     };
 
     success = await actions[action.value as keyof typeof actions]();
@@ -101,6 +112,12 @@ const ActionDropdown: FC<ActionDropdownProps> = ({ file }) => {
             />
           )}
           {value === "details" && <FileDetails file={file} />}
+          {value === "delete" && (
+            <p className="text-center text-light-100">
+              Are you sure you want to delete{" "}
+              <span className="font-semibold text-brand">{file.name}</span> ?
+            </p>
+          )}
 
           {["rename", "delete", "share"].includes(value) && (
             <DialogFooter className="text-center text-light-100">

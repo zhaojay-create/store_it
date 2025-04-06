@@ -17,3 +17,12 @@ export const actionsDropdownItems = [
   { label: "Download", value: "download", icon: "" },
   { label: "Delete", value: "delete", icon: "" },
 ];
+
+export const sortTypes = [
+  { label: "Created Time (Latest)", value: "$createdAt-desc" },
+  { label: "Created Time (Oldest)", value: "$createdAt-asc" },
+  { label: "Name(A-Z)", value: "name-asc" },
+  { label: "Name(Z-A)", value: "name-desc" },
+  { label: "Size(Highest)", value: "size-desc" },
+  { label: "Size(Lowest)", value: "size-asc" },
+];

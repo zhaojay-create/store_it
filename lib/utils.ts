@@ -48,7 +48,7 @@ export function getFileType(fileName: string) {
 export const getFileTypesParams = (type: string) => {
   switch (type) {
     case "documents":
-      return ["ddcument"];
+      return ["document"];
     case "images":
       return ["image"];
     case "media":

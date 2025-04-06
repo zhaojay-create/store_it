@@ -2,6 +2,8 @@
 
 import {
   DeleteFileProps,
+  FileType,
+  GetFilesProps,
   RenameFileProps,
   UpdateFileUsersProps,
   UploadFileProps,
@@ -70,26 +72,49 @@ export const uploadFile = async ({
   }
 };
 
-export const getFils = async () => {
+// 创建查询, 查询用户 id === ownerId 或者 users 中包含 email
+const createQueries = (
+  currentUser: Models.Document,
+  types: FileType[],
+  searchText: string,
+  sort: string,
+  limit?: number
+) => {
+  const queries = [
+    Query.or([
+      Query.equal("ownerId", [currentUser.$id]),
+      Query.contains("users", [currentUser.email]),
+    ]),
+  ];
+
+  if (types.length > 0) queries.push(Query.equal("type", types));
+  if (searchText) queries.push(Query.contains("name", searchText));
+  if (limit) queries.push(Query.limit(limit));
+
+  // 拆开排序
+  const [sortBy, orderBy] = sort.split("-");
+  queries.push(
+    orderBy === "asc" ? Query.orderAsc(sortBy) : Query.orderDesc(sortBy)
+  );
+
+  return queries;
+};
+// 获取文件
+export const getFiles = async ({
+  types = [],
+  searchText = "",
+  sort = "$createdAt-desc",
+  limit,
+}: GetFilesProps) => {
   const { databases } = await createAdminClient();
-
-  const createQueries = (currentUser: Models.Document) => {
-    const queries = [
-      Query.or([
-        Query.equal("ownerId", [currentUser.$id]),
-        Query.contains("users", [currentUser.email]),
-      ]),
-    ];
-
-    return queries;
-  };
 
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser) throw new Error("User not found");
 
-    const queries = createQueries(currentUser);
-    console.log("currentUser: ", currentUser);
+    const queries = createQueries(currentUser, types, searchText, sort, limit);
+    console.log("sort: ", sort);
+    // console.log("currentUser: ", currentUser);
     console.log("queries: ", queries);
 
     const files = await databases.listDocuments(
@@ -98,7 +123,7 @@ export const getFils = async () => {
       queries
     );
 
-    console.log("files: ", files);
+    // console.log("files: ", files);
     return parseStringify(files);
   } catch (error) {
     handleError(error, "Failed to get files");

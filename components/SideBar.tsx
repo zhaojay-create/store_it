@@ -49,7 +49,7 @@ const SideBar: FC<Props> = ({ fullName, email, avatar }) => {
       </nav>
 
       {/* 用户头像 */}
-      <div>
+      <div className="flex items-center gap-2 mt-6">
         <Image
           src={avatar}
           alt="avatar"
@@ -58,7 +58,8 @@ const SideBar: FC<Props> = ({ fullName, email, avatar }) => {
           className="rounded-full"
         />
         <div className="hidden lg:block">
-          {fullName} <br /> {email}
+          <p>{fullName}</p>
+          <p className="truncate w-[150px]">{email}</p>
         </div>
       </div>
     </aside>

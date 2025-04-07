@@ -19,7 +19,7 @@ import {
 import { Models } from "node-appwrite";
 import { actionsDropdownItems } from "@/constants";
 import { ActionType } from "@/types";
-import { constructDownloadUrl } from "@/lib/utils";
+import { cn, constructDownloadUrl } from "@/lib/utils";
 import Link from "next/link";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -30,12 +30,14 @@ import {
 } from "@/lib/actions/file.action";
 import { usePathname } from "next/navigation";
 import { FileDetails, ShareInput } from "./ActionModalContent";
+import Image from "next/image";
 
 interface ActionDropdownProps {
   file: Models.Document;
+  className?: string;
 }
 
-const ActionDropdown: FC<ActionDropdownProps> = ({ file }) => {
+const ActionDropdown: FC<ActionDropdownProps> = ({ file, className }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [action, setAction] = useState<ActionType | null>(null);
@@ -141,7 +143,9 @@ const ActionDropdown: FC<ActionDropdownProps> = ({ file }) => {
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuTrigger className={className}>
+          <Image src="/assets/more.svg" alt="more" width={24} height={24} />
+        </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel className="max-w-[200px] truncate">
             {file.name}

@@ -67,6 +67,7 @@ export const convertFileToUrl = (file: File) => {
 
 // 转换文件的，的大小
 export const convertFileSize = (size: number) => {
+  if (size === 0) return "0 B";
   const units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
   const exponent = Math.min(Math.floor(Math.log2(size) / 10), units.length - 1);
   const unit = units[exponent];
@@ -103,3 +104,39 @@ export const getFileIcon = (type: string) => {
       return "/assets/other_icon.png";
   }
 };
+
+// 获取用量概览
+export function getUsageSummary(total: any) {
+  const { image, video, audio, document, other } = total;
+
+  const mediaSize = video.size + audio.size;
+  const mediaLatestDate = new Date(
+    Math.max(
+      new Date(video.latestDate).getTime(),
+      new Date(audio.latestDate).getTime()
+    )
+  ).toISOString();
+
+  return [
+    {
+      type: "document",
+      size: document.size,
+      latestDate: document.latestDate,
+    },
+    {
+      type: "other",
+      size: other.size,
+      latestDate: other.latestDate || null,
+    },
+    {
+      type: "image",
+      size: image.size,
+      latestDate: image.latestDate,
+    },
+    {
+      type: "media",
+      size: mediaSize,
+      latestDate: mediaLatestDate,
+    },
+  ];
+}

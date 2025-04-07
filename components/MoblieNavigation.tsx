@@ -39,9 +39,11 @@ const MoblieNavigation: FC<Props> = ({
 
   return (
     <header className="flex justify-between items-center px-4">
-      <div>TitleImg</div>
+      <div className="hidden sm:block">TitleImg</div>
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger>Open</SheetTrigger>
+        <SheetTrigger className="hidden sm:block">
+          <Image src="/assets/more.svg" alt="more" width={24} height={24} />
+        </SheetTrigger>
         <SheetContent className="h-screen px-3">
           <SheetHeader>
             <SheetTitle>

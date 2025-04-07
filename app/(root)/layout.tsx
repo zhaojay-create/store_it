@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   const user = await getCurrentUser();
-  console.log("user: ", user);
 
   if (!user) return redirect("/sign-in");
 
@@ -16,7 +15,9 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
       <section className="flex h-screen flex-1 flex-col">
         <MoblieNavigation {...user} />
         <Header userId={user.$id} accountId={user.accountId} />
-        <div className="p-4">{children}</div>
+        <div className="mt-4 p-4 h-full bg-[#F4F5F8] rounded-2xl">
+          {children}
+        </div>
       </section>
     </main>
   );

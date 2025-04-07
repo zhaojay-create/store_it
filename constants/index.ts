@@ -1,11 +1,36 @@
 import { Label } from "@radix-ui/react-label";
 
 export const NavItems = [
-  { name: "Dashboard", icon: "/assets/logo.png", url: "/" },
-  { name: "Documents", icon: "/assets/logo.png", url: "/documents" },
-  { name: "Images", icon: "/assets/logo.png", url: "/images" },
-  { name: "Media", icon: "/assets/logo.png", url: "/media" },
-  { name: "Others", icon: "/assets/logo.png", url: "/others" },
+  {
+    name: "Dashboard",
+    activeIcon: "/assets/dashboard_active.svg",
+    icon: "/assets/dashboard.svg",
+    url: "/",
+  },
+  {
+    name: "Documents",
+    activeIcon: "/assets/document_active.svg",
+    icon: "/assets/document.svg",
+    url: "/documents",
+  },
+  {
+    name: "Images",
+    activeIcon: "/assets/image_active.svg",
+    icon: "/assets/image.svg",
+    url: "/images",
+  },
+  {
+    name: "Media",
+    activeIcon: "/assets/media_active.svg",
+    icon: "/assets/media.svg",
+    url: "/media",
+  },
+  {
+    name: "Others",
+    activeIcon: "/assets/other_active.svg",
+    icon: "/assets/other.svg",
+    url: "/others",
+  },
 ];
 
 export const MAX_FILE_SIZE = 50 * 1024 * 1024;

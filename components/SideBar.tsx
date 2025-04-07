@@ -29,18 +29,34 @@ const SideBar: FC<Props> = ({ fullName, email, avatar }) => {
       </Link>
       <nav className="mt-3">
         <ul className="flex flex-col flex-1 gap-6">
-          {NavItems.map(({ url, name, icon }) => {
+          {NavItems.map(({ url, name, icon, activeIcon }) => {
             const isActive = pathName === url;
             return (
-              <Link href={url} key={name} className="lg:w-full">
+              <Link
+                href={url}
+                key={name}
+                className={cn(
+                  "lg:w-full  rounded-2xl p-2",
+                  isActive && "bg-brand"
+                )}
+              >
                 <li
                   className={cn(
-                    "flex items-center gap-2 text-blue-500",
+                    "flex items-center gap-2 text-light-100",
                     isActive && "text-brand"
                   )}
                 >
-                  <Image src={icon} alt="logo" width={24} height={24} />
-                  <p className="hidden lg:block">{name}</p>
+                  <Image
+                    src={isActive ? activeIcon : icon}
+                    alt="logo"
+                    width={32}
+                    height={32}
+                  />
+                  <p
+                    className={cn("hidden lg:block", isActive && "text-white")}
+                  >
+                    {name}
+                  </p>
                 </li>
               </Link>
             );

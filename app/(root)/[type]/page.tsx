@@ -14,20 +14,18 @@ const Page = async ({ searchParams, params }: SearchParamProps) => {
   const files = await getFiles({ types, searchText, sort });
 
   return (
-    <div className="p-4 h-screen bg-amber-100">
+    <div className="p-4 h-screen ">
       <section className="w-full">
         <h1 className="text-3xl capitalize">{type}</h1>
 
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-4">
           <p className="">
             Total: <span className="text-xl">o MB</span>
           </p>
 
-          <div className="">
-            <p className="hidden sm:block text-light-200">
-              Sort By
-              <Sort />
-            </p>
+          <div className="flex items-center gap-2">
+            <p className="hidden sm:block text-light-200">Sort By</p>
+            <Sort />
           </div>
         </div>
       </section>

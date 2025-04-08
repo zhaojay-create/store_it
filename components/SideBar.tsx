@@ -18,9 +18,9 @@ const SideBar: FC<Props> = ({ fullName, email, avatar }) => {
 
   return (
     <aside className="p-4">
-      <Link href="/">
+      <Link href="/" className="flex items-center justify-center">
         <Image
-          src="/assets/logo.png"
+          src="/assets/logo.svg"
           alt="logo"
           width={72}
           height={72}

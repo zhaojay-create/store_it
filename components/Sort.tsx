@@ -25,7 +25,7 @@ const Sort: FC<SortProps> = ({}) => {
   return (
     <div>
       <Select onValueChange={handleSort} defaultValue={sortTypes[0].value}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-[230px]">
           <SelectValue placeholder={sortTypes[0].label} />
         </SelectTrigger>
         <SelectContent>

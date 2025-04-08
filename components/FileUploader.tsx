@@ -70,9 +70,12 @@ const FileUploader: FC<Props> = ({ ownerId, accountId, className }) => {
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
-      <Button type="button" className={cn("flex text-stone-600", className)}>
+      <Button
+        type="button"
+        className={cn("flex rounded-2xl gap-2 bg-brand", className)}
+      >
+        <Image src="/assets/upload.svg" alt="upload" width={24} height={24} />
         upload
-        {/* img 24x24 */}
       </Button>
       {files.length > 0 && (
         <aside className="fixed bottom-4 right-4 z-100 bg-white p-4 shadow-lg rounded-lg">

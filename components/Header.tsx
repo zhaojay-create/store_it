@@ -11,7 +11,7 @@ interface HeaderProps {
 
 const Header: FC<HeaderProps> = ({ userId, accountId }) => {
   return (
-    <header className="px-4 flex justify-between items-center">
+    <header className="mt-4 px-4 flex justify-between items-center">
       <Search />
       <div className="flex justify-around items-center gap-3">
         <FileUploader ownerId={userId} accountId={accountId} />
